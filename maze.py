@@ -13,6 +13,8 @@ class Maze:
             cell_size: int,
     ) -> None:
         self.win = win
+        self.cols = cols
+        self.rows = rows
         self.cells = self.create_cells(cols, rows, cell_size)
 
     def create_cells(self, cols, rows, cell_size) -> list[list[Cell]]:
@@ -37,6 +39,8 @@ class Maze:
         return cell
 
     def animate(self) -> None:
+        animation_seconds = 3
+        frame_time = animation_seconds / (self.cols * self.rows)
         self.win.redraw()
-        sleep(0.02)
+        sleep(frame_time)
 
