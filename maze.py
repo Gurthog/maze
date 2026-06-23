@@ -14,7 +14,7 @@ class Maze:
     ) -> None:
         self.win = win
         self.cells = self.create_cells(cols, rows, cell_size)
-    
+
     def create_cells(self, cols, rows, cell_size) -> list[list[Cell]]:
         cells = []
         for x in range(cols):
@@ -24,7 +24,7 @@ class Maze:
                 col.append(cell)
             cells.append(col)
         return cells
-    
+
     def create_cell(self, col, row, size) -> Cell:
         col_x = col * size
         row_y = row * size
@@ -35,7 +35,8 @@ class Maze:
         cell.draw(*top_left, *bottom_right)
         self.animate()
         return cell
-    
+
     def animate(self) -> None:
         self.win.redraw()
         sleep(0.02)
+

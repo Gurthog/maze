@@ -48,3 +48,4 @@ class Cell:
         line = Line(self.center(), to_cell.center())
         color = "gray" if undo else "red"
         self.__win.draw_line(line, color)
+

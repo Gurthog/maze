@@ -15,14 +15,15 @@ class Window:
     def redraw(self) -> None:
         self.root.update_idletasks()
         self.root.update()
-    
+
     def wait_for_close(self) -> None:
         self.running = True
         while self.running:
             self.redraw()
-    
+
     def close(self) -> None:
         self.running = False
 
     def draw_line(self, line: Line, fill_color: str="black") -> None:
         line.draw(self.canvas, fill_color)
+
