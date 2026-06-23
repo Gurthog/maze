@@ -8,15 +8,29 @@ class Tests(unittest.TestCase):
         cols = 12
         rows = 10
         cell_size = 10
-        m1 = Maze(cols, rows, cell_size)
+        maze = Maze(cols, rows, cell_size)
+
         self.assertEqual(
-                len(m1.cells),
+                len(maze.cells),
                 cols,
         )
         self.assertEqual(
-                len(m1.cells[0]),
+                len(maze.cells[0]),
                 rows,
         )
+
+    def test_maze_reset_visited(self):
+        cols = 10
+        rows = 10
+        cell_size = 10
+        maze = Maze(cols, rows, cell_size)
+
+        any_visited = False
+        for col in maze.cells:
+            for cell in col:
+                if cell.visited:
+                    any_visited = True
+        self.assertEqual(any_visited, False)
 
 
 if __name__ == "__main__":

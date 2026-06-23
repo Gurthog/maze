@@ -22,13 +22,13 @@ class Maze:
         if seed:
             random.seed(seed)
         self.break_walls()
+        self.reset_visited()
 
-    def animate(self) -> None:
+    def animate(self, duration=0.5) -> None:
         if not self.win:
             return
 
-        animation_seconds = 0.5
-        frame_time = animation_seconds / (self.cols * self.rows)
+        frame_time = duration / (self.cols * self.rows)
         self.win.redraw()
         sleep(frame_time)
 
@@ -49,21 +49,7 @@ class Maze:
         current_cell.visited = True
 
         while True:
-            unvisited = []
-            # left
-            if col > 0 and not self.cells[col-1][row].visited:
-                unvisited.append((col - 1, row))
-            # right
-            if col < self.cols - 1 and not self.cells[col+1][row].visited:
-                unvisited.append((col + 1, row))
-            # top
-            if row > 0 and not self.cells[col][row-1].visited:
-                unvisited.append((col, row - 1))
-            # bottom
-            if row < self.rows - 1 and not self.cells[col][row+1].visited:
-                unvisited.append((col, row + 1))
-
-            # if zero possible, draw current cell and break this loop
+            unvisited = self.unvisited_neighbors(col, row)
             if len(unvisited) == 0:
                 current_cell.draw()
                 self.animate()
@@ -86,6 +72,19 @@ class Maze:
                 next_cell.top = False
             self.break_walls(next_col, next_row)
 
+    def can_move(self, col, row, next_col, next_row) -> bool:
+        current_cell = self.cells[col][row]
+        next_cell = self.cells[next_col][next_row]
+        if next_col < col and not current_cell.left and not next_cell.right:
+            return True
+        if next_col > col and not current_cell.right and not next_cell.left:
+            return True
+        if next_row < row and not current_cell.top and not next_cell.bottom:
+            return True
+        if next_row > row and not current_cell.bottom and not next_cell.top:
+            return True
+        return False
+
     def create_cells(self, cols, rows, cell_size) -> list[list[Cell]]:
         cells = []
         for x in range(cols):
@@ -107,4 +106,45 @@ class Maze:
         cell.draw()
         self.animate()
         return cell
+
+    def reset_visited(self) -> None:
+        for col in self.cells:
+            for cell in col:
+                cell.visited = False
+
+    def solve(self, col=0, row=0) -> bool:
+        speed = 5
+        current_cell = self.cells[col][row]
+        current_cell.visited = True
+        if current_cell is self.cells[-1][-1]:
+            return True
+
+        unvisited = self.unvisited_neighbors(col, row)
+        for next_col, next_row in unvisited:
+            next_cell = self.cells[next_col][next_row]
+            if self.can_move(col, row, next_col, next_row):
+                current_cell.draw_move(next_cell)
+                self.animate(speed)
+                solved = self.solve(next_col, next_row)
+                if solved:
+                    return True
+                current_cell.draw_move(next_cell, undo=True)
+                self.animate(speed)
+        return False
+
+    def unvisited_neighbors(self, col, row) -> list[tuple[int, int]]:
+        unvisited = []
+        # left
+        if col > 0 and not self.cells[col-1][row].visited:
+            unvisited.append((col - 1, row))
+        # right
+        if col < self.cols - 1 and not self.cells[col+1][row].visited:
+            unvisited.append((col + 1, row))
+        # top
+        if row > 0 and not self.cells[col][row-1].visited:
+            unvisited.append((col, row - 1))
+        # bottom
+        if row < self.rows - 1 and not self.cells[col][row+1].visited:
+            unvisited.append((col, row + 1))
+        return unvisited
 

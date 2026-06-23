@@ -1,3 +1,5 @@
+from time import sleep
+
 from cell import Cell
 from maze import Maze
 from window import Window
@@ -9,12 +11,11 @@ def main():
     CELL_SIZE = 40
 
     win = Window(COLS * CELL_SIZE, ROWS * CELL_SIZE)
-    maze = Maze(COLS, ROWS, CELL_SIZE, win)
-    # start = maze.cells[2][2]
-    # end = maze.cells[8][8]
-    # start.draw_move(end)
-
-    win.wait_for_close()
+    while True:
+        win.reset_canvas()
+        maze = Maze(COLS, ROWS, CELL_SIZE, win)
+        maze.solve()
+        sleep(1)
 
 
 if __name__ == "__main__":

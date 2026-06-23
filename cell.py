@@ -48,12 +48,11 @@ class Cell:
         self.__win.draw_line(bottom_line, color)
 
     def draw_move(self, to_cell, undo=False) -> None:
-        line = Line(self.center(), to_cell.center())
-        color = "gray" if undo else "red"
-
         if not self.__win:
             return
 
+        line = Line(self.center(), to_cell.center())
+        color = "gray" if undo else "red"
         self.__win.draw_line(line, color)
 
     def set_location(self, x1, y1, x2, y2) -> None:
