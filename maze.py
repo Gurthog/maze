@@ -113,7 +113,7 @@ class Maze:
                 cell.visited = False
 
     def solve(self, col=0, row=0) -> bool:
-        speed = 5
+        speed = 6
         current_cell = self.cells[col][row]
         current_cell.visited = True
         if current_cell is self.cells[-1][-1]:
