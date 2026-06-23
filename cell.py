@@ -9,6 +9,7 @@ class Cell:
         self.right = True
         self.top = True
         self.bottom = True
+        self.visited = False
         self.__x1 = -1
         self.__y1 = -1
         self.__x2 = -1
