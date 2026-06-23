@@ -22,8 +22,15 @@ class Maze:
         if seed:
             random.seed(seed)
         self.break_walls()
-        if win:
-            self.win.redraw()
+
+    def animate(self) -> None:
+        if not self.win:
+            return
+
+        animation_seconds = 0.5
+        frame_time = animation_seconds / (self.cols * self.rows)
+        self.win.redraw()
+        sleep(frame_time)
 
     def break_entrance_and_exit(self) -> None:
         self.cells[0][0].top = False
@@ -59,6 +66,7 @@ class Maze:
             # if zero possible, draw current cell and break this loop
             if len(unvisited) == 0:
                 current_cell.draw()
+                self.animate()
                 break
 
             # pick random direction, knock down walls between this/that
@@ -89,8 +97,8 @@ class Maze:
         return cells
 
     def create_cell(self, col, row, size) -> Cell:
-        col_x = col * size
-        row_y = row * size
+        col_x = col * size + 1
+        row_y = row * size + 1
         top_left = (col_x, row_y)
         bottom_right = (col_x + size, row_y + size)
 
@@ -99,13 +107,4 @@ class Maze:
         cell.draw()
         self.animate()
         return cell
-
-    def animate(self) -> None:
-        if not self.win:
-            return
-
-        animation_seconds = 1
-        frame_time = animation_seconds / (self.cols * self.rows)
-        self.win.redraw()
-        sleep(frame_time)
 
