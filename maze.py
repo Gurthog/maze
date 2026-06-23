@@ -7,15 +7,27 @@ from window import Window
 class Maze:
     def __init__(
             self,
-            win: Window,
             cols: int,
             rows: int,
             cell_size: int,
+            win: Window = None,
     ) -> None:
         self.win = win
         self.cols = cols
         self.rows = rows
         self.cells = self.create_cells(cols, rows, cell_size)
+        self.break_entrance_and_exit()
+
+    def break_entrance_and_exit(self):
+        self.cells[0][0].top = False
+        self.cells[0][0].draw()
+        self.cells[-1][-1].bottom = False
+        self.cells[-1][-1].draw()
+
+        if not self.win:
+            return
+
+        self.win.redraw()
 
     def create_cells(self, cols, rows, cell_size) -> list[list[Cell]]:
         cells = []
@@ -34,12 +46,16 @@ class Maze:
         bottom_right = (col_x + size, row_y + size)
 
         cell = Cell(self.win)
-        cell.draw(*top_left, *bottom_right)
+        cell.set_location(*top_left, *bottom_right)
+        cell.draw()
         self.animate()
         return cell
 
     def animate(self) -> None:
-        animation_seconds = 3
+        if not self.win:
+            return
+
+        animation_seconds = 1
         frame_time = animation_seconds / (self.cols * self.rows)
         self.win.redraw()
         sleep(frame_time)
